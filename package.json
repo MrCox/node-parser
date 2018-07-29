@@ -1,0 +1,23 @@
+{
+  "name":"parser",
+  "version":"1.5.0",
+  "readme":"node module for reading, writing, and manipulating raw data",
+  "author":{
+    "name" : "Danny Cox",
+    "email": "sir.danny.cox@gmail.com"
+  },
+  "contributors": [
+    {
+      "name" : "Danny Cox",
+      "email": "sir.danny.cox@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "posix" : "*"
+  },
+  "repository" : {
+    "type" : "git",
+    "url"  : "https://github.com/MrCox/parser"
+  }
+  "main":"parser"
+}
