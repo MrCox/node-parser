@@ -17,7 +17,7 @@
   },
   "repository" : {
     "type" : "git",
-    "url"  : "https://github.com/MrCox/parser"
+    "url"  : "https://github.com/MrCox/node-parser"
   }
   "main":"parser"
 }
