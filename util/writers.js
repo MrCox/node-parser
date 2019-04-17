@@ -14,6 +14,7 @@ function to_csv(to, headers) {
   var t = this,
     fd = fs.openSync(to, 'w'),
     heads = headers || t.headers();
+
   this._pre().push(function() {
     if (!heads) {
       var f = fs.openSync(t.from(), 'r'), b = new Buffer(t._topBytes());
@@ -26,6 +27,7 @@ function to_csv(to, headers) {
     var b = new Buffer(heads.map(add_quotes).join(',') + '\n');
     fs.writeSync(fd, b, 0, b.length);
   })
+
   this._post().push(function() { fs.close(fd); })
   var h;
   return function(row, ind, raw) {
@@ -76,6 +78,7 @@ function csv_to_json(to) {
   }
 }
 
+
 function to_asv(to, headers) {
   to = to || this.to();
   var t = this,
@@ -101,9 +104,13 @@ function to_asv(to, headers) {
   }
 }
 
+
 function add_quotes(_) {
-  return _.match(',') ? '"' + _ + '"' : _;
+  return typeof _ == 'string'
+    ? (_.match(',') ? '"' + _ + '"' : _)
+    : _;
 }
+
 function check_val(d) {
   return d != undefined && d != null ? d : '';
 }
