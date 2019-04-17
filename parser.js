@@ -52,6 +52,7 @@ var parser = chain(function(from, to) {
     var r = readers[ intype(self.from()) ],
       q = _queue.map(function(fn) { return r.call(self, fn); }),
       ind = 0; // absolute index
+
     reader(function(rows, newline) {
       var nl = newline && (new Buffer(newline)).length || 0;
       rows.forEach(function(row, i) {
