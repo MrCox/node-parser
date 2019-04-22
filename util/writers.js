@@ -16,14 +16,22 @@ function to_csv(to, headers) {
     heads = headers || t.headers();
 
   this._pre().push(function() {
+    // finds headers
     if (!heads) {
-      var f = fs.openSync(t.from(), 'r'), b = new Buffer(t._topBytes());
+      var f = fs.openSync(t.from(), 'r'),
+        b = new Buffer(t._topBytes());
+
       fs.readSync(f, b, 0, t._topBytes(), 0);
-      require('./readers')[t.intype()].call(t, function(row) {
-        t.headers(heads = Object.keys(row));
-      }).call(t, b.toString().split(t.newline())[0], 1);
+
+      require('./readers')[t.intype()]
+        .call(t, function(row) {
+          t.headers(heads = Object.keys(row));
+        })
+        .call(t, b.toString());
+
       fs.close(f);
     }
+
     var b = new Buffer(heads.map(add_quotes).join(',') + '\n');
     fs.writeSync(fd, b, 0, b.length);
   })

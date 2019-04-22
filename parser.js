@@ -157,26 +157,48 @@ var parser = chain(function(from, to) {
   }
 
   function reader(cb) {
-    var start, from = self.from(), newline = self.newline();
+    var start,
+      from = self.from(),
+      newline = self.newline();
+
     self._pre().forEach(function(f) { f.call(self); });
 
-    fs.createReadStream(from).on('data', function(d) {
-      var str = d.toString();
-      if (start) str = start + str;
+    if (newline) {
 
-      var rows = str.split(newline), // gets array of rows
-        n = str.match(newline); // actual newline char
+      fs.createReadStream(from).on('data', function(d) {
+        var str = d.toString();
+        if (start) str = start + str;
 
-      start = rows.pop(); // stashes last row
-      cb.call(self, rows, n && n[0]);
-    }).on('end', function() {
-      if (start) {
-        var n = start.match(newline);
-        cb.call(self, [start], n && n[0]); // if leftover row
-      }
-      self._post().forEach(function(f) { f.call(self); });
-      self.emit("read_complete", self);
-    });
+        var rows = str.split(newline), // gets array of rows
+          n = str.match(newline); // actual newline char
+
+        start = rows.pop(); // stashes last row
+        cb.call(self, rows, n && n[0]);
+      }).on('end', function() {
+        if (start) {
+          var n = start.match(newline);
+          cb.call(self, [start], n && n[0]); // if leftover row
+        }
+        self._post().forEach(function(f) { f.call(self); });
+        self.emit("read_complete", self);
+      });
+
+    } else {
+
+      fs.createReadStream(from).on('data', function(d) {
+        var str = d.toString();
+        if (start) str = start + str;
+        var ind = str.lastIndexOf('{');
+        start = str.substr(ind);
+
+        cb.call(self, [str.substr(0, ind)]);
+      }).on('end', function() {
+        if (start) cb.call(self, [start]);
+        self._post().forEach(function(f) { f.call(self); });
+        self.emit("read_complete", self);
+      });
+
+    }
   }
 
   function grouper(to, key, reduce) {
