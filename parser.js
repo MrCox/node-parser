@@ -11,20 +11,20 @@ module.exports = function(source, dest) { return parser(source, dest); }
 var parser = chain(function(from, to) {
   var self = this, _queue = [];
   self.queue = function() { return _queue; }
-  self.var('headerObj');
-  self.var('index');
-  self.var('_jobs', 0);
-  self.var('_topBytes', 10000);
-  self.var('_pre', []);
-  self.var('_post', []);
-  self.var('to', to);
-  self.var('from', from);
-  self.var('newline', /\r\n|\n/);
-  self.var('intype', 'rows');
-  self.var('outtype', 'json');
-  self.var("quote");
-  self.var('delimiter', ',');
-  self.var('headers', null, function(_) {
+  self.createSetting('headerObj');
+  self.createSetting('index');
+  self.createSetting('_jobs', 0);
+  self.createSetting('_topBytes', 10000);
+  self.createSetting('_pre', []);
+  self.createSetting('_post', []);
+  self.createSetting('to', to);
+  self.createSetting('from', from);
+  self.createSetting('newline', /\r\n|\n/);
+  self.createSetting('intype', 'rows');
+  self.createSetting('outtype', 'json');
+  self.createSetting("quote");
+  self.createSetting('delimiter', ',');
+  self.createSetting('headers', null, function(_) {
     if (typeof _ === "number") {
       self._vars.headers = [], i = -1;
       while (++i < _) self._vars.headers.push(i);

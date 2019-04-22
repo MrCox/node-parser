@@ -7,7 +7,8 @@ var parser = require("../parser");
   .dump("_visits.csv")
   .execute();*/
 
-parser("./newvisits.json")
+parser("./visits.json")
+  .newline(false)
   .intype("json")
   .outtype("csv")
   .dump("visits.csv")

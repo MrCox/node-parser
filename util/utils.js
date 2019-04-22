@@ -105,33 +105,14 @@ function chain(cb) {
     var self = Object.create(events.EventEmitter.prototype);
     self._vars = {}
 
-    self.var = function(name, def, fn) {
+    self.createSetting = function(name, def, fn) {
       self._vars[name] = def;
       self[name] = function(_) {
         if (!arguments.length) return self._vars[name];
-        arguments[arguments.length] = self._vars[name];
         self._vars[name] = _;
-        fn && fn.apply(self, arguments);
+        fn && fn(_);
         return self;
       }
-    }
-
-    self.function = function(name, fn) {
-      self[name] = function() {
-        fn.apply(self, arguments);
-        return self;
-      }
-    }
-
-    self.call = function(fn) {
-      var args = Array.prototype.slice.call(arguments);
-      args.unshift(self);
-      fn.apply(self, args);
-      return self;
-    }
-
-    self.vars = function() {
-      Array.prototype.forEach.call(arguments, function(a) { self.var(a) });
     }
 
     cb && cb.apply(self, arguments);
